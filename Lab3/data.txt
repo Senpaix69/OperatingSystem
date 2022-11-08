@@ -1,0 +1,3 @@
+Emp002 Senpai M Guru 10 50000
+Emp001 Huraira M Internee 1 15000
+Emp004 Testing M ABS 12 1224
