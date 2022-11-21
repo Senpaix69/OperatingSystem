@@ -4,7 +4,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-
+void childFun(int *pip, char *str, int eachChildGetsData, int childNo);
 int main(int argc, char **argv)
 {
     if (argc > 1)
@@ -26,8 +26,6 @@ int main(int argc, char **argv)
                     }
                 }
 
-                //           Divide And Conquror
-                // ---------------------------------------
                 const int eachChildGetsData = (lines / 4) == 0 ? 1 : lines / 4;
                 printf("%d\n", eachChildGetsData);
 
@@ -74,103 +72,34 @@ int main(int argc, char **argv)
                                         wait(NULL);
                                     }
                                     else if (c4 == 0) // C4 Child
-                                    {
-                                        char data[1000] = {};
-                                        int row = (eachChildGetsData * 3) + 1;
-                                        close(p4[1]);
-                                        // printf("Child 4\n----------------------------------------\n");
-                                        while (read(p4[0], data, 200))
-                                        {
-
-                                            char *ptr = strstr(data, argv[2]);
-                                            if (ptr)
-                                            {
-                                                int col = strlen(data) - strlen(ptr) + 1;
-                                                printf("Found String at: %d row and %d col\n", row, col);
-                                            }
-                                            row++;
-                                        }
-                                        close(p4[0]);
-                                    }
+                                        childFun(p4, argv[2], eachChildGetsData, 3);
                                     else
                                         printf("C3 Child Process Failed\n");
 
                                     wait(NULL);
                                 }
                                 else if (c3 == 0) // C3 Child
-                                {
-                                    char data[1000] = {};
-                                    int row = (eachChildGetsData * 2) + 1;
-                                    close(p3[1]);
-                                    // printf("Child 3\n----------------------------------------\n");
-                                    while (read(p3[0], data, 200))
-                                    {
-
-                                        char *ptr = strstr(data, argv[2]);
-                                        if (ptr)
-                                        {
-                                            int col = strlen(data) - strlen(ptr) + 1;
-                                            printf("Found String at: %d row and %d col\n", row, col);
-                                        }
-                                        row++;
-                                    }
-                                    close(p3[0]);
-                                }
+                                    childFun(p3, argv[2], eachChildGetsData, 2);
                                 else
                                     printf("C3 Child Process Failed\n");
 
                                 wait(NULL);
                             }
                             else if (c2 == 0) // C2 Child
-                            {
-                                char data[1000] = {};
-                                int row = eachChildGetsData + 1;
-                                close(p2[1]);
-                                // printf("Child 2\n----------------------------------------\n");
-                                while (read(p2[0], data, 200))
-                                {
-
-                                    char *ptr = strstr(data, argv[2]);
-                                    if (ptr)
-                                    {
-                                        int col = strlen(data) - strlen(ptr) + 1;
-                                        printf("Found String at: %d row and %d col\n", row, col);
-                                    }
-                                    row++;
-                                }
-                                close(p2[0]);
-                            }
+                                childFun(p2, argv[2], eachChildGetsData, 1);
                             else
                                 printf("C2 Child Process Failed\n");
                         }
                         wait(NULL);
                     }
                     else if (c1 == 0) // C1 Child
-                    {
-                        char data[1000] = {};
-                        int row = 1;
-                        close(p1[1]);
-                        // printf("Child 1\n----------------------------------------\n");
-                        while (read(p1[0], data, 200))
-                        {
-
-                            char *ptr = strstr(data, argv[2]);
-                            if (ptr)
-                            {
-                                int col = strlen(data) - strlen(ptr) + 1;
-                                printf("Found String at: %d row and %d col\n", row, col);
-                            }
-                            row++;
-                        }
-                        close(p1[0]);
-                    }
+                        childFun(p1, argv[2], 0, 0);
                     else
                         printf("C1 Child Process Failed\n");
                 }
                 else
                     printf("Pipe Creation Failed\n");
 
-                // ----------------------------------------
 
                 fclose(fin);
             }
@@ -183,4 +112,22 @@ int main(int argc, char **argv)
     else
         printf("No arguments has been passed through command line\n");
     return 0;
+}
+
+void childFun(int *pip, char *str, int eachChildGetsData, int childNo)
+{
+    char data[1000] = {};
+    int row = (eachChildGetsData * childNo) + 1;
+    close(pip[1]);
+    while (read(pip[0], data, 200))
+    {
+        char *ptr = strstr(data, str);
+        if (ptr)
+        {
+            int col = strlen(data) - strlen(ptr) + 1;
+            printf("Found String at: %d row and %d col\n", row, col);
+        }
+        row++;
+    }
+    close(pip[0]);
 }
