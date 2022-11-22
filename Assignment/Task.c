@@ -14,14 +14,14 @@ int main(int argc, char **argv)
             FILE *fin = fopen(argv[1], "r");
             if (fin)
             {
-                char readFile[2000][1000] = {};
+                char readFile[7000][1000] = {};
                 int lines = 0;
                 while (!feof(fin))
                 {
                     fgets(readFile[lines++], 1000, fin);
-                    if (lines == 2000)
+                    if (lines == 7000)
                     {
-                        printf("Warning: Reading data exceeds the limit of 2000 lines\n");
+                        printf("Warning: Reading data exceeds the limit of 7000 lines\n");
                         break;
                     }
                 }
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
                         // Sending String to child 1
                         close(p1[0]);
                         for (int i = 0; i < eachChildGetsData; i++)
-                            write(p1[1], readFile[i], 200);
+                            write(p1[1], readFile[i], 1000);
                         close(p1[1]);
 
                         // if need to create more child?
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
                             {
                                 close(p2[0]);
                                 for (int i = eachChildGetsData; i < eachChildGetsData * 2; i++)
-                                    write(p2[1], readFile[i], 200);
+                                    write(p2[1], readFile[i], 1000);
                                 close(p2[1]);
 
                                 // Child 3
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
                                 {
                                     close(p3[0]);
                                     for (int i = eachChildGetsData * 2; i < eachChildGetsData * 3; i++)
-                                        write(p3[1], readFile[i], 200);
+                                        write(p3[1], readFile[i], 1000);
                                     close(p3[1]);
 
                                     int c4 = fork();
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
                                     {
                                         close(p4[0]);
                                         for (int i = eachChildGetsData * 3; i < eachChildGetsData * 4 || i < lines; i++)
-                                            write(p4[1], readFile[i], 200);
+                                            write(p4[1], readFile[i], 1000);
                                         close(p4[1]);
 
                                         wait(NULL);
@@ -119,7 +119,7 @@ void childFun(int *pip, char *str, int eachChildGetsData, int childNo)
     char data[1000] = {};
     int row = (eachChildGetsData * childNo) + 1;
     close(pip[1]);
-    while (read(pip[0], data, 200))
+    while (read(pip[0], data, 1000))
     {
         char *ptr = strstr(data, str);
         if (ptr)
