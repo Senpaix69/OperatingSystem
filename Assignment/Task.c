@@ -76,21 +76,18 @@ int main(int argc, char **argv)
                                     else
                                         printf("C3 Child Process Failed\n");
 
-                                    wait(NULL);
                                 }
                                 else if (c3 == 0) // C3 Child
                                     childFun(p3, argv[2], eachChildGetsData, 2);
                                 else
                                     printf("C3 Child Process Failed\n");
 
-                                wait(NULL);
                             }
                             else if (c2 == 0) // C2 Child
                                 childFun(p2, argv[2], eachChildGetsData, 1);
                             else
                                 printf("C2 Child Process Failed\n");
                         }
-                        wait(NULL);
                     }
                     else if (c1 == 0) // C1 Child
                         childFun(p1, argv[2], 0, 0);
