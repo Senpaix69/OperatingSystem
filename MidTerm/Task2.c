@@ -91,12 +91,13 @@ int main()
 }
 
 /*
-    0 -> READ (STDIN_FILENO) -> Terminal (Kernal)
-    1 -> WRITE (STDOUT_FILENO) -> Terminal (Kernal)
-    2 -> ERR (STDERR_FILENO) -> Terminal (Kernal)
+    Discriptors     Performs
+    0       ->      READ (STDIN_FILENO)
+    1       ->      WRITE (STDOUT_FILENO)
+    2       ->      ERR (STDERR_FILENO)
 
-    PIPE[2]
-    4 -> READ -> 0 Ind
-    5 -> WRITE -> 1 Ind
-
+    Can Be Any Other Than 0 - 2 for pipe and file
+    3       ->      FILE
+    4       ->      READ   ->     pipe[0]
+    5       ->      WRITE  ->     pipe[1]
 */

@@ -77,6 +77,9 @@ int main(int argc, char **argv)
             read(fd4[0], &sm1, sizeof(int));
             close(fd4[0]);
 
+            printf("C1 Returns: %d\n", sm1);
+            printf("C2 Returns: %d\n", sm2);
+
             if (sm1 > sm2)
                 printf("The smallest number is: %d\n", sm2);
             else
@@ -89,6 +92,8 @@ int main(int argc, char **argv)
             read(fd2[0], data, size2 * sizeof(int));
             close(fd2[0]);
 
+            printf("C2 ");
+            display(data, size1);
             int sm = smallest(data, size2);
             close(fd3[0]);
             write(fd3[1], &sm, sizeof(sm));
@@ -104,6 +109,8 @@ int main(int argc, char **argv)
         read(fd1[0], data, size1 * sizeof(int));
         close(fd1[0]);
 
+        printf("C1 ");
+        display(data, size1);
         int sm = smallest(data, size1);
         close(fd4[0]);
         write(fd4[1], &sm, sizeof(sm));
