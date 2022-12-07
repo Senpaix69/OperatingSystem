@@ -69,7 +69,7 @@ int main(int argc, char **argv)
                                             write(p4[1], readFile[i], 1000);
                                         close(p4[1]);
 
-                                        wait(NULL);
+                                        waitpid(c4, NULL, 0);
                                     }
                                     else if (c4 == 0) // C4 Child
                                         childFun(p4, argv[2], eachChildGetsData, 3);
@@ -123,6 +123,7 @@ void childFun(int *pip, char *str, int eachChildGetsData, int childNo)
         {
             int col = strlen(data) - strlen(ptr) + 1;
             printf("Found String at: %d row and %d col\n", row, col);
+            break;
         }
         row++;
     }
