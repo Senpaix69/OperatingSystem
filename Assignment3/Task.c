@@ -36,7 +36,7 @@ int main(int argc, char **argv)
         if (pthread_create(&thread[i], NULL, &routine, (void *)id) != 0)
         {
             printf("Error: Creating Thread Failed\n");
-            return 2;
+            return -2;
         }
     }
 
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
         if (pthread_join(thread[i], (void **)&res) != 0)
         {
             printf("Error: Joining Thread Failed\n");
-            return 2;
+            return -2;
         }
         if (res)
         {
@@ -71,3 +71,25 @@ void *routine(void *arg)
     free(arg);
     return (void*)fact;
 }
+
+/*  DRY RUN ROUTINE
+    
+    M = 2, N = 5
+    -----------------------------------------------------
+    Thread  Calculations            cond    Calculated
+    1       1*(1+2 = 3)*(1+2+3 = 5) 5<=5    1*3*5 = 15
+    2       2*(2+2 = 4)             4<=5    2*4   = 8
+
+    Result = 15*8 = 120    
+    -----------------------------------------------------
+
+    M = 3, N = 5
+    -----------------------------------------------------
+    Thread  Calculations            cond    Calculated
+    1       1*(1+3 = 4)             4<=5    1*4 = 4
+    2       2*(2+3 = 5)             5<=5    5*2 = 10
+    3       3                       3<=5    3   = 3  
+
+    Result = 4*10*3 = 120
+    -----------------------------------------------------
+*/
